@@ -1216,9 +1216,20 @@ fn update_python_setup_py(path: &Path, language_name: &str, opts: &GenerateOpts)
         }
         if !contents.contains("include(\"src/*.c\")") {
             info!("Updating sdist file list in setup.py");
-            let contents = contents.replace(
+            contents = contents.replace(
                 "include(\"src/tree_sitter/*.h\")",
                 "include(\"src/tree_sitter/*.h\")\n        self.filelist.include(\"src/*.c\")",
+            );
+            write_file(path, &contents)?;
+        }
+        if !contents.contains("exclude_package_data") {
+            info!("Excluding C sources from installed package in setup.py");
+            let lower_name = language_name.to_snake_case();
+            contents = contents.replace(
+                "    ext_package=",
+                &format!(
+                    "    exclude_package_data={{\n        \"tree_sitter_{lower_name}\": [\"*.c\"],\n    }},\n    ext_package="
+                ),
             );
             write_file(path, &contents)?;
         }

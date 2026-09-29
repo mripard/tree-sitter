@@ -52,6 +52,9 @@ setup(
         "tree_sitter_LOWER_PARSER_NAME": ["*.pyi", "py.typed"],
         "tree_sitter_LOWER_PARSER_NAME.queries": ["*.scm"],
     },
+    exclude_package_data={
+        "tree_sitter_LOWER_PARSER_NAME": ["*.c"],
+    },
     ext_package="tree_sitter_LOWER_PARSER_NAME",
     ext_modules=[
         Extension(
